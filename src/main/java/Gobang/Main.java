@@ -1,11 +1,10 @@
 package Gobang;
 
 import Gobang.Controllers.TestController;
+import Gobang.Entity.GobangMap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -16,7 +15,9 @@ public class Main extends Application {
     public Stage primaryStage;
 
     AnchorPane anchorPane;
-
+    GobangMap currentGobangMap=new GobangMap();
+    public int chessColor=1;
+    public  int count=0;
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -40,8 +41,6 @@ public class Main extends Application {
             primaryStage.setMinHeight(768.0);
             primaryStage.setTitle("BJTU Gobang");
 
-
-
             primaryStage.setResizable(true);
             TestController testControl = loader.getController();
             testControl.setMainApplication(this,anchorPane);
@@ -52,6 +51,19 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
+    }
+
+    public GobangMap getCurrentGobangMap()
+    {
+        return currentGobangMap;
+    }
+
+    public void setCurrentGobangMap(GobangMap currentGobangMap) {
+        this.currentGobangMap = currentGobangMap;
+    }
+
+    public AnchorPane getAnchorPane() {
+        return anchorPane;
     }
 
     public static void main(String[] args) {

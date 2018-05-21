@@ -1,20 +1,30 @@
 package Gobang.Controllers;
+import Gobang.Constant.Constant;
+import Gobang.Entity.GobangMap;
+import Gobang.Entity.Player;
 import Gobang.Main;
-import javafx.event.EventType;
+
+import Gobang.Net.Network;
+import com.google.gson.Gson;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
+
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
+
+import java.util.List;
 
 
 public class TestController {
 
     Main mainApplication;
     AnchorPane anchorPane;
-
+    Network network=Network.getNetwork();
+    Constant constant=Constant.getConstant();
     @FXML
     Button cheki;
 
@@ -27,73 +37,107 @@ public class TestController {
     @FXML
     ImageView boardImage;
     @FXML
+    Button solo;
+    @FXML
+    Button renji;
+    @FXML
+    Button refresh;
+
+    @FXML
+    ComboBox<String> playerComboBox;
+    @FXML
     private void initialize()
     {
-
-       // boardImage.setVisible(false);
-        boardImage.addEventHandler(MouseEvent.MOUSE_CLICKED,new PutEvent());
-        //boardImage.setVisible(false);
-
-
-       // Image cheki_image=new Image("images/悔棋.png");
-      //  cheki.setGraphic(new ImageView(cheki_image));
-
-
-//        DropShadow shadow = new DropShadow();
-////Adding the shadow when the mouse cursor is on
-//        cheki.addEventHandler(MouseEvent.MOUSE_ENTERED, (MouseEvent e) -> {
-//            cheki.setEffect(shadow);
-//        });
-//
-////Removing the shadow when the mouse cursor is off
-//        cheki.addEventHandler(MouseEvent.MOUSE_EXITED, (MouseEvent e) -> {
-//            cheki.setEffect(null);
-//        });
+        flushUser();
     }
 
-    public void setMainApplication(Main mainApplication, AnchorPane anchorPane){
+    public void setMainApplication(Main mainApplication, AnchorPane anchorPane){//落子
         this.mainApplication=mainApplication;
         this.anchorPane=anchorPane;
 
-        //相对棋盘位置来下棋子，保证后期若由于界面调整棋盘移动后，棋子落子位置依旧准确
-        ImageView qizi=new ImageView(new Image("images/黑棋.png"));
-        double begin_x=boardImage.getLayoutX()+10;
-        double begin_y=boardImage.getLayoutY()+11;
+        double begin_x=boardImage.getLayoutX()+27;//第一个棋子的坐标为（195+27，78+27）
+        double begin_y=boardImage.getLayoutY()+27;
 
-        qizi.setLayoutX(begin_x);
-        qizi.setLayoutY(begin_y);
+        boardImage.addEventHandler(MouseEvent.MOUSE_CLICKED,new PutEvent(mainApplication,begin_x,begin_y));
+    }
 
-        System.out.println(begin_x+" "+begin_y);
+    @FXML
+    public void clickSolo(){
+        Dialog<Pair<String, String>> dialog = new Dialog<Pair<String, String>>();
+        dialog.setTitle("输入用户名");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
 
-        //每个棋子的像素是34px * 34px ，棋盘格子是43 * 43 px
-        ImageView qizi_test=new ImageView(new Image("images/黑棋.png"));
-        begin_x=begin_x+43;
-        begin_y=begin_y+43;
-        qizi_test.setLayoutX(begin_x);
-        qizi_test.setLayoutY(begin_y);
+        final TextField name = new TextField();
+        name.setPromptText("用户名");
 
-        System.out.println(begin_x+" "+begin_y);
+        grid.add(new Label("用户名:"), 0, 0);
+        grid.add(name, 1, 0);
 
-        ImageView qizi_test2=new ImageView(new Image("images/白棋.png"));
-        begin_x=begin_x+43;
-        begin_y=begin_y+43;
-        qizi_test2.setLayoutX(begin_x);
-        qizi_test2.setLayoutY(begin_y);
+        dialog.getDialogPane().setContent(grid);
 
-        System.out.println(begin_x+" "+begin_y);
+        dialog.setOnCloseRequest(new EventHandler<DialogEvent>() {
+            public void handle(DialogEvent event) {
+                Player player=new Player(name.getText());
+                player.setFlag(-1);
+                player.setBlackOrWhite(-1);
+                if(!name.getText().equals("")) {
+                    int res = network.joinSolo(player);
+                    if (res == 226) {
+                        Alert _alert = new Alert(Alert.AlertType.INFORMATION);
+                        _alert.setTitle("加入游戏");
+                        _alert.setHeaderText(null);
+                        _alert.setContentText("用户名重复请重新输入");
+                        _alert.show();
+                    }
+                    else
+                        flushUser();
+                }
+                else{
+                    Alert _alert = new Alert(Alert.AlertType.INFORMATION);
+                    _alert.setTitle("加入游戏");
+                    _alert.setHeaderText(null);
+                    _alert.setContentText("请输入用户名");
+                    _alert.show();
+                }
 
-        ImageView qizi_test3=new ImageView(new Image("images/黑棋.png"));
-        begin_x=begin_x+43;
-        begin_y=begin_y+43;
-        qizi_test3.setLayoutX(begin_x);
-        qizi_test3.setLayoutY(begin_y);
+            }
+        });
+        dialog.show();
+    }
 
-        anchorPane.getChildren().add(qizi);
-        anchorPane.getChildren().add(qizi_test);
-        anchorPane.getChildren().add(qizi_test2);
-        anchorPane.getChildren().add(qizi_test3);
+    @FXML
+    public void clickRenji(){
+        try{
+            network.getUsers();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    //刷新用户列表
+    public void flushUser(){
+        try{
+            playerComboBox.getItems().remove(0,playerComboBox.getItems().size());
+            List<Player> playerList=network.getUsers();
+            for(Player temp:playerList)
+                playerComboBox.getItems().add(temp.getUsername()+" "+ constant.getStates(temp.getFlag()));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //重玩
+    public void refresh(){
+        try{
+            mainApplication.showtestUi();
+            mainApplication.setCurrentGobangMap(new GobangMap());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
