@@ -1,15 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gobang.Controllers.TestController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: white; -fx-background-image: url(images/背景.png)" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gobang.Controllers.TestController">
    <children>
-      <Button layoutX="277.0" layoutY="61.0" mnemonicParsing="false" text="test" />
-      <Text layoutX="193.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is a Gobang UI FXML test" />
+      <ImageView fx:id="boardImage" fitHeight="659.0" fitWidth="654.0" layoutX="195.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/board.jpg" />
+         </image>
+      </ImageView>
+      <Button fx:id="surrender" layoutX="25.0" layoutY="296.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/认输.png)">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Button>
+      <Button fx:id="cheki" layoutX="25.0" layoutY="154.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="137.0" style=" -fx-background-image: url(images/悔棋.png)">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Button>
+      <Text fill="WHITE" layoutX="425.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0"  text="GoBang">
+         <font>
+            <Font name="System Bold" size="48.0" />
+         </font>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Text>
+      <Button fx:id="peace" layoutX="25.0" layoutY="442.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/和棋.png);">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+      </Button>
    </children>
 </AnchorPane>
