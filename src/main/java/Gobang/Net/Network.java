@@ -1,5 +1,6 @@
 package Gobang.Net;
 
+import Gobang.Entity.GobangMap;
 import Gobang.Entity.Player;
 import Gobang.Util.JsonChangeStrUtil;
 import com.google.gson.Gson;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class Network {
 
-    private static final String base_URI = "http://localhost:8080/";
+    public static final String base_URI = "http://localhost:8080/";
     public  static  Network network=new Network();
 
     public static  Network getNetwork(){
@@ -25,8 +26,10 @@ public class Network {
             return network;
     }
 
-    public int joinSolo(Player player){
-        int res=0;
+    public GobangMap joinSolo(Player player){
+        String result=null;
+        Gson gson = new Gson();
+        GobangMap gobangMap=null;
         try {
             String uri = base_URI + "player/addPlayer";
             URL url = new URL(uri);
@@ -41,7 +44,7 @@ public class Network {
             String json = JsonChangeStrUtil.convertJavaBeanToJson(player);
 
             if (json == null) {
-                return 100;
+                return null;
             }
 
             if (json.length() != 0) {
@@ -54,15 +57,26 @@ public class Network {
             os.flush();
             os.close();
 
-             res=uc.getResponseCode();
+            InputStream inputStream = uc.getInputStream();
+            InputStream buffer = new BufferedInputStream(inputStream);
+            Reader r = new InputStreamReader(buffer);
+            int c;
+            StringBuilder bodys = new StringBuilder();
+            while ((c = r.read()) != -1) {
+                bodys.append((char) c);
+            }
+            result=bodys.toString();
+            JsonParser parser = new JsonParser();
+            JsonObject obj=parser.parse(result).getAsJsonObject();
+             gobangMap=gson.fromJson(obj,GobangMap.class);
+
             //控制台显示，debug或者加日志
             System.out.println("do Json Post(Sign up): getResponseCode " + uc.getResponseCode());
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return res;
+        return gobangMap;
     }
 
     public List<Player> getUsers() throws IOException{
@@ -76,7 +90,7 @@ public class Network {
     }
 
 
-    private static String getStrFromUri (String uri) throws IOException {
+    public static String getStrFromUri (String uri) throws IOException {
         URL url = new URL(uri);
         HttpURLConnection uc = (HttpURLConnection) url.openConnection();
         uc.setDoInput(true);
@@ -95,8 +109,11 @@ public class Network {
         return body.toString();
     }
 
-    public String down(int i,int j,int color) throws IOException{
+    //下子
+    public GobangMap down(int i,int j,int color,int tag,int count) throws IOException{
         String result=null;
+        Gson gson = new Gson();
+        GobangMap gobangMap=null;
         try {
             String uri = base_URI + "player/down";
             URL url = new URL(uri);
@@ -108,8 +125,7 @@ public class Network {
             uc.setRequestProperty("Accept", "application/json");
             uc.setRequestMethod("POST");
             //参数
-            String body = "i="+i+"&j="+j+"&color="+color;
-
+            String body = "i="+i+"&j="+j+"&color="+color+"&tag="+tag+"&count="+count;
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(uc.getOutputStream(), "UTF-8"));
             writer.write(body);
@@ -125,11 +141,16 @@ public class Network {
                 bodys.append((char) c);
             }
             result=bodys.toString();
+
+            JsonParser parser = new JsonParser();
+            JsonObject obj=parser.parse(result).getAsJsonObject();
+            gobangMap=gson.fromJson(obj,GobangMap.class);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return result;
+        return gobangMap;
     }
+
 
 }

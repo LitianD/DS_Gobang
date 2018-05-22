@@ -4,9 +4,54 @@ public class GobangMap {
 
     int currentColor;
     public Vex[][] map=new Vex[15][15];
-    boolean overFlag;
+    int overFlag;
     Player p1;
+
+    public int getOverFlag() {
+        return overFlag;
+    }
+
+    public void setOverFlag(int overFlag) {
+        this.overFlag = overFlag;
+    }
+
+    public Player getP1() {
+        return p1;
+    }
+
+    public void setP1(Player p1) {
+        this.p1 = p1;
+    }
+
+    public Player getP2() {
+        return p2;
+    }
+
+    public void setP2(Player p2) {
+        this.p2 = p2;
+    }
+
+    public int getTag() {
+        return tag;
+    }
+
+    public void setTag(int tag) {
+        this.tag = tag;
+    }
+
+    public int getLastPlayer() {
+        return lastPlayer;
+    }
+
+    public void setLastPlayer(int lastPlayer) {
+        this.lastPlayer = lastPlayer;
+    }
+
     Player p2;
+    //桌号
+    int tag;
+    //上次下子玩家
+    int lastPlayer;
 
     public GobangMap(){
         for(int i=0;i<15;i++)

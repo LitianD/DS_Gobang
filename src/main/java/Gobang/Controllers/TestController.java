@@ -5,6 +5,7 @@ import Gobang.Entity.Player;
 import Gobang.Main;
 
 import Gobang.Net.Network;
+import Gobang.Thread.MatchThread;
 import com.google.gson.Gson;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -16,6 +17,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 
@@ -84,26 +87,24 @@ public class TestController {
                 Player player=new Player(name.getText());
                 player.setFlag(-1);
                 player.setBlackOrWhite(-1);
-                if(!name.getText().equals("")) {
-                    int res = network.joinSolo(player);
-                    if (res == 226) {
-                        Alert _alert = new Alert(Alert.AlertType.INFORMATION);
-                        _alert.setTitle("加入游戏");
-                        _alert.setHeaderText(null);
-                        _alert.setContentText("用户名重复请重新输入");
-                        _alert.show();
-                    }
-                    else
-                        flushUser();
-                }
-                else{
+
+                if(name.getText().equals("")) {
                     Alert _alert = new Alert(Alert.AlertType.INFORMATION);
                     _alert.setTitle("加入游戏");
                     _alert.setHeaderText(null);
                     _alert.setContentText("请输入用户名");
                     _alert.show();
                 }
-
+                else{
+                    GobangMap gobangMap=network.joinSolo(player);
+                    solo.setVisible(false);
+                    //如果游戏可以开始
+                    if(gobangMap.getOverFlag()==0) {
+                        MatchThread matchThread = new MatchThread(gobangMap.getTag());
+                        Thread thread = new Thread(matchThread);
+                        thread.start();
+                    }
+                }
             }
         });
         dialog.show();
@@ -126,7 +127,7 @@ public class TestController {
             for(Player temp:playerList)
                 playerComboBox.getItems().add(temp.getUsername()+" "+ constant.getStates(temp.getFlag()));
         }catch(Exception e){
-            e.printStackTrace();
+            e.printStackTrace();;
         }
     }
 
