@@ -1,2 +1,4 @@
-# DS_Gobang
-BJTU SE DataStructure final ex_Gobang(contain pvp pvc and support networking model ，The GUI uses QT framework)
+# Gobang(PVP AND PVC)
+The server use springBoot frame and the client use javafx frame(tomacat) 
+support multiplayer match
+pvc achieve Triple pruning
