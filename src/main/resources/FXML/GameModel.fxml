@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="568.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gobang.Controllers.GameModelController">
+   <children>
+      <MediaView fx:id="mediaView" fitHeight="768.0" fitWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <viewport>
+            <Rectangle2D height="768.0" width="1024.0" />
+         </viewport></MediaView>
+      <Button layoutX="59.0" layoutY="207.0" mnemonicParsing="false" onAction="#HandlePVCButton" style="-fx-background-color: white;" text="人机对战" textFill="#797777" />
+      <Button layoutX="59.0" layoutY="125.0" mnemonicParsing="false" onAction="#HandlePVPButton" style="-fx-background-color: white;" text="人人对战" textFill="#7c6f6f" />
+      <Text layoutX="49.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="五子棋" wrappingWidth="113.0">
+         <font>
+            <Font name="System Bold" size="33.0" />
+         </font>
+         <fill>
+            <RadialGradient centerX="0.5113636363636364" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop color="#ff7474" />
+                  <Stop color="#a40000" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </fill></Text>
+      <Button fx:id="leaderboard" layoutX="62.0" layoutY="289.0" mnemonicParsing="false" onAction="#showLeaderBoard" style="-fx-background-color: white;" text="排 行 榜" textFill="#797777" />
+      <Label fx:id="label" layoutX="270.0" layoutY="37.0">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+         <textFill>
+            <RadialGradient centerX="0.5113636363636364" centerY="0.5" radius="0.5">
+               <stops>
+                  <Stop color="#ff7474" />
+                  <Stop color="#a40000" offset="1.0" />
+               </stops>
+            </RadialGradient>
+         </textFill>
+      </Label>
+   </children>
+</AnchorPane>

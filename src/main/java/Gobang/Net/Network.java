@@ -1,5 +1,6 @@
 package Gobang.Net;
 
+import Gobang.Entity.DownTemp;
 import Gobang.Entity.GobangMap;
 import Gobang.Entity.Player;
 import Gobang.Util.JsonChangeStrUtil;
@@ -68,7 +69,7 @@ public class Network {
             result=bodys.toString();
             JsonParser parser = new JsonParser();
             JsonObject obj=parser.parse(result).getAsJsonObject();
-             gobangMap=gson.fromJson(obj,GobangMap.class);
+            gobangMap=gson.fromJson(obj,GobangMap.class);
 
             //控制台显示，debug或者加日志
             System.out.println("do Json Post(Sign up): getResponseCode " + uc.getResponseCode());
@@ -90,7 +91,7 @@ public class Network {
     }
 
 
-    public static String getStrFromUri (String uri) throws IOException {
+    public synchronized static String getStrFromUri (String uri) throws IOException {
         URL url = new URL(uri);
         HttpURLConnection uc = (HttpURLConnection) url.openConnection();
         uc.setDoInput(true);
@@ -114,8 +115,9 @@ public class Network {
         String result=null;
         Gson gson = new Gson();
         GobangMap gobangMap=null;
+        DownTemp downTemp=new DownTemp(i,j,color,tag,count);
         try {
-            String uri = base_URI + "player/down";
+            String uri = base_URI + "players/down";
             URL url = new URL(uri);
             HttpURLConnection uc = (HttpURLConnection) url.openConnection();
             uc.setDoInput(true);
@@ -124,12 +126,22 @@ public class Network {
             uc.setRequestProperty("Content-Type", "application/json");
             uc.setRequestProperty("Accept", "application/json");
             uc.setRequestMethod("POST");
-            //参数
-            String body = "i="+i+"&j="+j+"&color="+color+"&tag="+tag+"&count="+count;
 
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(uc.getOutputStream(), "UTF-8"));
-            writer.write(body);
-            writer.close();
+            String json = JsonChangeStrUtil.convertJavaBeanToJson(downTemp);
+
+            if (json == null) {
+                return null;
+            }
+
+            if (json.length() != 0) {
+                byte[] writebytes = json.getBytes();
+                //设置文件长度
+                uc.setRequestProperty("Content-Length", String.valueOf(writebytes.length));
+            }
+            OutputStream os = uc.getOutputStream();
+            os.write(json.getBytes());
+            os.flush();
+            os.close();
 
             //获取返回
             InputStream inputStream = uc.getInputStream();
@@ -152,5 +164,53 @@ public class Network {
         return gobangMap;
     }
 
+    //网络对战位成功服务端wait--   tag是桌号 ，isQiutSelf为0时表示不是逃跑，1表示是逃跑
+    public void  quit(int tag,int isQiutSelf){
+        try {
+            String uri = base_URI + "player/waitQuit";
+            URL url = new URL(uri);
+            HttpURLConnection uc = (HttpURLConnection) url.openConnection();
+            uc.setDoInput(true);
+            uc.setDoOutput(true);
+            uc.setRequestProperty("Charset", "UTF-8");
+            uc.setRequestProperty("Content-Type", "application/json");
+            uc.setRequestProperty("Accept", "application/json");
+            uc.setRequestMethod("POST");
+
+            Player player=new Player("quit");
+            if(isQiutSelf==1&&tag!=-1) {
+                player.setFlag(3);
+                System.out.println("自己主动退出游戏");
+            }
+            if(isQiutSelf==0&&tag==-1)
+            {
+                System.out.println("匹配时取消匹配");
+            }
+            if(isQiutSelf==0&&tag!=-1)
+            {
+                System.out.println("得到对手逃跑消息后发送自己离开消息");
+            }
+                player.tag=tag;
+
+            System.out.println("发送给服务器的Player信息为: tag: "+player.tag+"isQiutSelf: "+player.getFlag());
+            String json = JsonChangeStrUtil.convertJavaBeanToJson(player);
+
+            if (json.length() != 0) {
+                byte[] writebytes = json.getBytes();
+                //设置文件长度
+                uc.setRequestProperty("Content-Length", String.valueOf(writebytes.length));
+            }
+            OutputStream os = uc.getOutputStream();
+            os.write(json.getBytes());
+            os.flush();
+            os.close();
+
+            //控制台显示，debug或者加日志
+            System.out.println("do Json Post(Sign up): getResponseCode " + uc.getResponseCode());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -30,7 +30,7 @@
                </light>
             </Lighting>
          </effect></Button>
-      <Button fx:id="cheki" layoutX="25.0" layoutY="154.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="137.0" style=" -fx-background-image: url(images/悔棋.png)">
+      <Button fx:id="cheki" layoutX="25.0" layoutY="154.0" mnemonicParsing="false" onAction="#Handlecheki" prefHeight="37.0" prefWidth="137.0" style=" -fx-background-image: url(images/悔棋.png)">
          <effect>
             <Lighting>
                <bumpInput>
@@ -67,9 +67,73 @@
             </Lighting>
          </effect>
       </Button>
-      <Button fx:id="solo" layoutX="53.0" layoutY="522.0" mnemonicParsing="false" onAction="#clickSolo" text="网络对战" />
-      <Button fx:id="renji" layoutX="53.0" layoutY="571.0" mnemonicParsing="false" onAction="#clickRenji" text="人机对战" />
+      <Button fx:id="solo" layoutX="25.0" layoutY="442.0" mnemonicParsing="false" onAction="#clickSolo" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/快速匹配.png);">
+         <effect>
+            <Lighting>
+               <light>
+                  <Light.Distant />
+               </light>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+            </Lighting>
+         </effect></Button>
+      <Button fx:id="renji" layoutX="25.0" layoutY="570.0" mnemonicParsing="false" onAction="#clickRenji" prefHeight="37.0" prefWidth="137.0" text="人机对战" />
       <ComboBox fx:id="playerComboBox" layoutX="860.0" layoutY="303.0" prefWidth="150.0" />
-      <Button fx:id="refresh" layoutX="58.0" layoutY="610.0" mnemonicParsing="false" text="重玩" onAction="#refresh" />
+      <Button fx:id="refresh" layoutX="25.0" layoutY="296.0" mnemonicParsing="false" onAction="#refresh" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/重玩.png);">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Button>
+      <Button fx:id="returnToChooseModel" layoutX="25.0" layoutY="582.0" mnemonicParsing="false" onAction="#clickReturnToChooseModel" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/返回大厅.png);">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Button>
+      <Button fx:id="Rewatch_next" layoutX="867.0" layoutY="154.0" mnemonicParsing="false" onAction="#handleReWatch_next" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/查看下一步.png);">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Button>
+      <Button fx:id="Rewatch_pre" layoutX="867.0" layoutY="296.0" mnemonicParsing="false" onAction="#handleReWatch_pre" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/查看上一步.png);">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Button>
+      <Button fx:id="OutRewatch" layoutX="867.0" layoutY="442.0" mnemonicParsing="false" onAction="#handleOutRewatchAndReplay" prefHeight="37.0" prefWidth="137.0" style="-fx-background-image: url(images/退出回放.png);">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect></Button>
    </children>
 </AnchorPane>
